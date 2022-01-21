@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+
+  node:
+    container_name: brute-node
+    build:
+      context: ./
+      dockerfile: node/Dockerfile
+    tty: true
+    ports:
+      - "3003:3000"
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+    networks:
+      - brute-network
+
+  postgres:
+    container_name: brute-postgres
+    build: postgres/
+    tty: true
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    networks:
+      - brute-network
+
+networks:
+  brute-network:
+    driver: bridge
